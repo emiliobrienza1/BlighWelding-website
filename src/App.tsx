@@ -169,7 +169,7 @@ export default function App() {
 
           <div className="navRight">
             <button className="callBtn" onClick={() => openQuote()}>
-              Call / Quote
+                Quote
             </button>
           </div>
         </div>

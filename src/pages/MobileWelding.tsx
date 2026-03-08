@@ -1,5 +1,6 @@
 // src/pages/MobileWelding.tsx
 import React, { useEffect, useRef } from "react";
+import mobileWeld1 from "../assets/mobileweld1.jpg";
 
 function useReveal() {
   const ref = useRef<HTMLDivElement>(null);
@@ -24,55 +25,50 @@ function useReveal() {
   return ref;
 }
 
-const FRAME: React.CSSProperties = {
-  borderRadius: 20,
-  overflow: "hidden",
-  border: "1px solid var(--border)",
-  boxShadow: "0 30px 90px rgba(8,12,18,0.20)",
-  background: "var(--card)",
-  position: "relative",
-  minHeight: 420,
-};
-
-function ImgSlot({ src, alt, hint }: { src: string; alt: string; hint: string }) {
+function ImgSlot({ src, alt }: { src: string; alt: string }) {
   return (
-    <div style={FRAME}>
-      <img
-        src={src}
-        alt={alt}
-        style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", filter: "saturate(0.93) contrast(1.06)" }}
-        onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
-      />
-      <div style={{ position: "absolute", inset: 0, display: "grid", placeItems: "center", textAlign: "center", padding: 24, color: "var(--muted)", background: "var(--card)", pointerEvents: "none" }}>
-        <div>
-          <div style={{ fontSize: 38, marginBottom: 10 }}>🔧</div>
-          <div style={{ fontWeight: 900, fontSize: 13, letterSpacing: "0.08em" }}>YOUR PHOTO HERE</div>
-          <div style={{ fontSize: 11, marginTop: 8, opacity: 0.6 }}><code>{hint}</code></div>
-        </div>
-      </div>
+    <div className="mwImgWrap">
+      <img src={src} alt={alt} className="mwImg" />
     </div>
   );
 }
 
 const useCases = [
-  { icon: "🚛", label: "Broken Trailers" },
-  { icon: "🚗", label: "Vehicle Repairs" },
-  { icon: "🚜", label: "Farm Machinery" },
-  { icon: "🏗️", label: "Structural Steel Repairs" },
-  { icon: "🚪", label: "Gates, Railings & Outdoor Metalwork" },
-  { icon: "⚙️", label: "Plant Equipment & On-Site Machinery" },
+  {
+    label: "Vehicle Repairs",
+    desc: "Chassis work, cracks, reinforcement and structural welding.",
+  },
+  {
+    label: "Farm Machinery",
+    desc: "Repairs to agricultural equipment, brackets, arms and worn components.",
+  },
+  {
+    label: "Structural Steel Repairs",
+    desc: "On-site repair of damaged or weakened steel sections.",
+  },
+  {
+    label: "Gates, Railings & Outdoor Metalwork",
+    desc: "Breakages, hinge replacements, reinforcement and restoration.",
+  },
+  {
+    label: "Plant Equipment & On-Site Machinery",
+    desc: "Repairs to diggers, attachments, buckets and site equipment.",
+  },
 ];
 
 const whyUs = [
   "City & Guilds qualified — Level 1, 2 & 3 MIG Welding",
-  "No transport needed — I come directly to you",
+  "No transport needed — we come directly to you",
   "Ideal for urgent, time-sensitive repairs",
   "Strong, clean welds carried out to a high standard",
   "Domestic and commercial clients welcome",
   "Covering Tunbridge Wells and all surrounding areas",
 ];
 
-const areas = ["Tunbridge Wells", "Tonbridge", "Sevenoaks", "Crowborough", "Uckfield", "Paddock Wood", "Maidstone", "& More"];
+const areas = [
+  "Tunbridge Wells", "Tonbridge", "Sevenoaks", "Crowborough",
+  "Uckfield", "Paddock Wood", "Maidstone", "& More",
+];
 
 export default function MobileWelding(props: { onOpenQuote?: () => void }) {
   const { onOpenQuote } = props;
@@ -81,96 +77,82 @@ export default function MobileWelding(props: { onOpenQuote?: () => void }) {
   return (
     <div ref={pageRef}>
 
-      {/* ── HERO ── */}
+      {/* HERO */}
       <section className="pageHero">
         <div className="pageHeroBg" />
-        <div className="pageHeroInner" style={{ gridTemplateColumns: "1fr", padding: "96px 18px 80px" }}>
+        <div className="pageHeroInner" style={{ gridTemplateColumns: "1fr" }}>
           <div data-reveal>
-            <div className="kicker" style={{ color: "rgba(238,241,245,0.65)", marginBottom: 16 }}>
-              SERVICES / MOBILE WELDING
-            </div>
-            <h1 className="pageHeroTitle" style={{ fontSize: 52 }}>
-              Mobile Welding —<br />
-              <span className="accent">Tunbridge Wells</span> & Surrounding Areas
+            <div className="kicker">SERVICES / MOBILE WELDING</div>
+            <h1 className="pageHeroTitle">
+              Mobile Welding &mdash;<br />
+              <span className="accent">Tunbridge Wells</span> &amp; Surrounding Areas
             </h1>
-            <p className="pageHeroSub" style={{ maxWidth: 580, fontSize: 16 }}>
-              Fully mobile welding service. I come directly to your home, yard, farm or worksite —
-              so your equipment stays exactly where it is.
+            <p className="pageHeroSub" style={{ maxWidth: 560 }}>
+              Fully mobile welding service. We come directly to your home, yard,
+              farm or worksite — so your equipment stays exactly where it is.
             </p>
-            <div className="heroCtas" style={{ marginTop: 10 }}>
-              {onOpenQuote && (
-                <button className="primaryCta" type="button" onClick={onOpenQuote}>
-                  Get a Free Quote
-                </button>
-              )}
-            </div>
+            {onOpenQuote && (
+              <button className="btnSolid" type="button" onClick={onOpenQuote}>
+                Get a Free Quote
+              </button>
+            )}
           </div>
         </div>
       </section>
 
-      {/* ── SECTION 1: INTRO + IMAGE ── */}
+      {/* SECTION 1 — INTRO + IMAGE */}
       <section className="section">
-        <div style={{ maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 36, alignItems: "center" }}>
-
+        <div className="ihfSplit">
           <div data-reveal style={{ "--d": "0ms" } as React.CSSProperties}>
-            <div className="kicker" style={{ marginBottom: 14 }}>MOBILE WELDING</div>
-            <h2 style={{ margin: "0 0 20px", fontSize: 36, letterSpacing: "-0.02em", lineHeight: 1.1 }}>
+            <div className="kicker">MOBILE WELDING</div>
+            <h2 className="ihfHeading">
               Professional Mobile Welding in Tunbridge Wells
             </h2>
-            <p style={{ color: "var(--muted)", fontSize: 15, lineHeight: 1.8, marginBottom: 16 }}>
-              I provide a fully mobile welding service across Tunbridge Wells and the surrounding
-              areas, coming directly to your home, yard, site or premises. Mobile welding is ideal
-              for repairs and projects that can't easily be transported.
+            <p className="ihfPara">
+              We provide a fully mobile welding service across Tunbridge Wells
+              and the surrounding areas, coming directly to your home, yard,
+              site or premises. Mobile welding is ideal for repairs and projects
+              that can't easily be transported.
             </p>
-            <p style={{ color: "var(--muted)", fontSize: 15, lineHeight: 1.8, marginBottom: 28 }}>
-              Whether your vehicle has broken down on your drive, equipment has failed on site, or
-              you have large machinery that can't be moved — I can carry out the welding work where
-              it stands. I focus on strong, reliable welds and practical solutions that get you back
+            <p className="ihfPara">
+              Whether your vehicle has broken down on your drive, equipment has
+              failed on site, or you have large machinery that can't be moved —
+              we can carry out the welding work where it stands. We focus on
+              strong, reliable welds and practical solutions that get you back
               up and running as quickly as possible.
             </p>
             {onOpenQuote && (
-              <button className="primaryCta" type="button" onClick={onOpenQuote}>
+              <button className="btnSolid" type="button" onClick={onOpenQuote} style={{ marginTop: 8 }}>
                 Get In Touch
               </button>
             )}
           </div>
-
           <div data-reveal style={{ "--d": "140ms" } as React.CSSProperties}>
-            <ImgSlot src="/assets/service-mobile.jpg" alt="Mobile welder on site" hint="/public/assets/service-mobile.jpg" />
+            <ImgSlot src={mobileWeld1} alt="Mobile welder working on-site" />
           </div>
         </div>
       </section>
 
-      {/* ── SECTION 2: USE CASES + IMAGE ── */}
+      {/* SECTION 2 — USE CASES + IMAGE */}
       <section className="section alt">
-        <div style={{ maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 36, alignItems: "center" }}>
-
+        <div className="ihfSplit ihfSplitReverse">
           <div data-reveal style={{ "--d": "0ms" } as React.CSSProperties}>
-            <ImgSlot src="/assets/service-mobile2.jpg" alt="Welding trailer repair" hint="/public/assets/service-mobile2.jpg" />
+            <ImgSlot src={mobileWeld1} alt="Trailer welding repair" />
           </div>
-
           <div data-reveal style={{ "--d": "140ms" } as React.CSSProperties}>
-            <div className="kicker" style={{ marginBottom: 14 }}>WHAT WE REPAIR</div>
-            <h2 style={{ margin: "0 0 20px", fontSize: 34, letterSpacing: "-0.02em", lineHeight: 1.1 }}>
-              Mobile Welding Services
-            </h2>
-            <p style={{ color: "var(--muted)", fontSize: 15, lineHeight: 1.7, marginBottom: 22 }}>
-              This service is particularly useful for urgent repairs or heavy equipment that would
-              be difficult or costly to transport. Common call-outs include:
+            <div className="kicker">WHAT WE REPAIR</div>
+            <h2 className="ihfHeading">Mobile Welding Services</h2>
+            <p className="ihfPara">
+              Our mobile welding service is ideal for urgent repairs and heavy
+              equipment that would be difficult or costly to transport. We come
+              to you with the tools and equipment needed to carry out strong,
+              reliable repairs on-site. Common call-outs include:
             </p>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+            <div className="ihfUseCases">
               {useCases.map((u) => (
-                <div
-                  key={u.label}
-                  style={{
-                    display: "flex", alignItems: "center", gap: 10,
-                    background: "var(--card)", backgroundImage: "var(--sheen)",
-                    border: "1px solid var(--border)", borderRadius: 12,
-                    padding: "11px 14px", boxShadow: "0 4px 14px rgba(8,12,18,0.08)",
-                  }}
-                >
-                  <span style={{ fontSize: 18 }}>{u.icon}</span>
-                  <span style={{ fontWeight: 800, fontSize: 13, color: "rgba(20,24,31,0.88)", lineHeight: 1.3 }}>{u.label}</span>
+                <div key={u.label} className="ihfUseCase">
+                  <div className="ihfUseCaseLabel">{u.label}</div>
+                  <div className="ihfUseCaseDesc">{u.desc}</div>
                 </div>
               ))}
             </div>
@@ -178,90 +160,60 @@ export default function MobileWelding(props: { onOpenQuote?: () => void }) {
         </div>
       </section>
 
-      {/* ── SECTION 3: WHY CHOOSE ── */}
+      {/* SECTION 3 — WHY US + IMAGE */}
       <section className="section">
-        <div style={{ maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 36, alignItems: "center" }}>
-
+        <div className="ihfSplit">
           <div data-reveal style={{ "--d": "0ms" } as React.CSSProperties}>
-            <div className="kicker" style={{ marginBottom: 14 }}>WHY CHOOSE US</div>
-            <h2 style={{ margin: "0 0 20px", fontSize: 34, letterSpacing: "-0.02em", lineHeight: 1.1 }}>
+            <div className="kicker">WHY CHOOSE US</div>
+            <h2 className="ihfHeading">
               Why Choose Bligh Welding as Your Mobile Welder?
             </h2>
-            <p style={{ color: "var(--muted)", fontSize: 15, lineHeight: 1.75, marginBottom: 24 }}>
-              I've carried out mobile welding work for domestic and commercial clients across
-              Tunbridge Wells and the surrounding towns. Here's why customers choose me:
+            <p className="ihfPara">
+              We arrive fully equipped and ready to work. No call-out delays
+              waiting for equipment to be delivered — everything needed to carry
+              out a professional weld is brought directly to your location.
             </p>
-            <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "grid", gap: 12 }}>
+            <ul className="ihfChecklist">
               {whyUs.map((item) => (
-                <li
-                  key={item}
-                  style={{
-                    display: "grid", gridTemplateColumns: "28px 1fr", gap: 12,
-                    alignItems: "center", fontSize: 14, fontWeight: 700,
-                    color: "rgba(20,24,31,0.84)",
-                  }}
-                >
-                  <span style={{
-                    width: 26, height: 26, borderRadius: "50%",
-                    background: "var(--blue)", border: "1px solid rgba(18,24,32,0.14)",
-                    display: "grid", placeItems: "center", fontSize: 12, fontWeight: 900,
-                    color: "#0f141b",
-                  }}>✓</span>
+                <li key={item} className="ihfCheckItem">
+                  <span className="ihfCheckMark">&#10003;</span>
                   {item}
                 </li>
               ))}
             </ul>
           </div>
-
           <div data-reveal style={{ "--d": "140ms" } as React.CSSProperties}>
-            <ImgSlot src="/assets/service-mobile3.jpg" alt="Welder carrying out on-site repair" hint="/public/assets/service-mobile3.jpg" />
+            <ImgSlot src={mobileWeld1} alt="On-site welding repair" />
           </div>
         </div>
       </section>
 
-      {/* ── SECTION 4: CLOSING CTA ── */}
+      {/* SECTION 4 — CTA */}
       <section className="section alt">
-        <div
-          data-reveal
-          style={{
-            maxWidth: 860, margin: "0 auto", textAlign: "center",
-            background: "var(--card)", backgroundImage: "var(--sheen)",
-            border: "1px solid var(--border)", borderRadius: 24,
-            boxShadow: "0 30px 90px rgba(8,12,18,0.18)",
-            padding: "52px 48px",
-          }}
-        >
-          <div className="kicker" style={{ marginBottom: 16 }}>GET IN TOUCH</div>
-          <h2 style={{ margin: "0 0 18px", fontSize: 36, letterSpacing: "-0.02em" }}>
+        <div className="ihfCtaBox" data-reveal>
+          <div className="kicker">GET IN TOUCH</div>
+          <h2 className="ihfCtaHeading">
             Need a Mobile Welder in Tunbridge Wells?
           </h2>
-          <p style={{ color: "var(--muted)", fontSize: 15, lineHeight: 1.8, maxWidth: 640, margin: "0 auto 32px" }}>
-            If you're searching for a mobile welder in Tunbridge Wells or any of the surrounding
-            areas, get in touch today. Whether it's an urgent breakdown or a planned repair, I'll
-            provide a prompt, professional service and get the job done right.
+          <p className="ihfCtaPara">
+            Get in touch today for a free, no-obligation quote. We cover
+            Tunbridge Wells and all surrounding areas — domestic and commercial
+            enquiries welcome.
           </p>
-
           <div className="contactBar" style={{ marginBottom: 32 }}>
-            <a className="contactPill" href="tel:+15551234567">
-              📞 (555) 123-4567
-            </a>
-            <a className="contactPill" href="mailto:info@blighwelding.co.uk">
-              ✉️ info@blighwelding.co.uk
-            </a>
+            <a className="contactPill" href="tel:01234567890">01234 567890</a>
+            <a className="contactPill" href="mailto:info@blighwelding.co.uk">info@blighwelding.co.uk</a>
             {onOpenQuote && (
-              <button className="heroQuoteBtn" type="button" onClick={onOpenQuote}>
-                ✉ Request a Quote
+              <button className="btnSolid" type="button" onClick={onOpenQuote}>
+                Request a Quote
               </button>
             )}
           </div>
-
-          <div style={{ borderTop: "1px solid var(--border)", paddingTop: 24 }}>
+          <div className="ihfCtaAreas">
             <div className="kicker" style={{ marginBottom: 14 }}>AREAS COVERED</div>
-            <div style={{ display: "flex", gap: 8, justifyContent: "center", flexWrap: "wrap" }}>
+            <div className="ihfAreaBadges">
               {areas.map((t) => (
-                <span key={t} className="badge" style={{ fontSize: 12, padding: "7px 12px", fontWeight: 700 }}>
-                  📍 {t}
-                </span>
+                <span key={t} className="badge">{t}</span>
               ))}
             </div>
           </div>
