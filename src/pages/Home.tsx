@@ -1,16 +1,22 @@
 // src/pages/Home.tsx
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import heroBg from '../assets/homebg.png';
+import Callout from '../assets/24hr.png';
+import Agriculture from '../assets/agriculture.png';
+import MOT from '../assets/MOT.png';
+import Mobile from '../assets/mobileweld.jpg';
+import Other from '../assets/Other.png';
 import { NavLink } from "react-router-dom";
 
 type Service = { title: string; desc: string; image: string; };
 
 const services: Service[] = [
-  { title: "Mobile Welding",            desc: "On-site welding repairs wherever you need us — homes, farms, worksites, and commercial sites.", image: "/assets/service-mobile.jpg" },
-  { title: "MOT Failure Repairs",       desc: "Failed your MOT due to corrosion or damage? We can repair and reinforce safely and correctly.",  image: "/assets/service-mot.jpg"    },
-  { title: "Agricultural & Industrial", desc: "Heavy-duty welding and fabrication for machinery, equipment, and structural work.",              image: "/assets/service-agri.jpg"   },
-  { title: "In-House Fabrication",      desc: "Custom fabrication in our workshop — gates, railings, brackets, frames and more.",              image: "/assets/service-agri.jpg"   },
-  { title: "Emergency Callout",         desc: "Need urgent repairs? Fast response for critical fixes and breakdowns.",                         image: "/assets/service-agri.jpg"   },
-  { title: "Other Work",                desc: "If you can't see it listed, it doesn't mean we don't do it — get in touch for a quote.",        image: "/assets/service-agri.jpg"   },
+  { title: "Mobile Welding",            desc: "On-site welding repairs wherever you need us — homes, farms, worksites, and commercial sites.", image: Mobile },
+  { title: "MOT Failure Repairs",       desc: "Failed your MOT due to corrosion or damage? We can repair and reinforce safely and correctly.",  image: MOT },
+  { title: "Agricultural & Industrial", desc: "Heavy-duty welding and fabrication for machinery, equipment, and structural work.",              image: Agriculture },
+{ title: "In-House Fabrication",      desc: "Custom fabrication in our workshop — gates, railings, brackets, frames and more.",              image:  Agriculture},
+  { title: "Emergency Callout",         desc: "Need urgent repairs? Fast response for critical fixes and breakdowns.",                         image: Callout },
+  { title: "Other Work",                desc: "If you can't see it listed, it doesn't mean we don't do it — get in touch for a quote.",        image: Other },
 ];
 
 const recentWorkImports = import.meta.glob("/src/assets/recentwork/*.{png,jpg,jpeg,webp}", {
@@ -169,26 +175,46 @@ function useReveal() {
 
 const trustItems = ["City & Guilds Qualified", "Mobile & In-House", "Domestic & Commercial", "Same-Day Response", "Kent & Sussex"];
 
-/* ── Multi-image strip slideshow ────────────────────────── */
+/* ── Recent Work Slideshow ───────────────────────────────── */
 function RecentWorkStrip({ images }: { images: { src: string; alt: string }[] }) {
   const [active, setActive] = useState(0);
+  const [transitioning, setTransitioning] = useState(false);
   const timerRef = useRef<number | null>(null);
   const count = images.length;
 
   const clear = () => { if (timerRef.current) clearInterval(timerRef.current); };
+
+  const advance = (dir: number) => {
+    if (transitioning) return;
+    setTransitioning(true);
+    setTimeout(() => {
+      setActive(c => (c + dir + count) % count);
+      setTransitioning(false);
+    }, 320);
+  };
+
   const start = () => {
     clear();
     if (count <= 1) return;
-    timerRef.current = window.setInterval(() => setActive(c => (c + 1) % count), 4500);
+    timerRef.current = window.setInterval(() => advance(1), 5000);
   };
-  const go = (n: number) => { setActive((n + count) % count); start(); };
+
+  const go = (n: number) => {
+    if (transitioning || n === active) return;
+    setTransitioning(true);
+    setTimeout(() => {
+      setActive(n);
+      setTransitioning(false);
+    }, 320);
+    start();
+  };
 
   useEffect(() => { start(); return clear; }, [count]);
 
   if (count === 0) return null;
 
-  // Show 3 visible at a time (center = active)
-  const getIndex = (offset: number) => (active + offset + count) % count;
+  const prev = (active - 1 + count) % count;
+  const next = (active + 1) % count;
 
   return (
     <div
@@ -198,24 +224,38 @@ function RecentWorkStrip({ images }: { images: { src: string; alt: string }[] })
       role="region"
       aria-label="Recent work"
     >
-      <div className="rwStripTrack">
-        {/* Prev (half-visible left) */}
-        <div className="rwStripTile rwStripTile--side rwStripTile--left" onClick={() => go(active - 1)}>
-          <img src={images[getIndex(-1)].src} alt={images[getIndex(-1)].alt} draggable={false} />
-        </div>
-        {/* Main */}
-        <div className="rwStripTile rwStripTile--main">
-          <img src={images[active].src} alt={images[active].alt} draggable={false} />
-        </div>
-        {/* Next (half-visible right) */}
-        <div className="rwStripTile rwStripTile--side rwStripTile--right" onClick={() => go(active + 1)}>
-          <img src={images[getIndex(1)].src} alt={images[getIndex(1)].alt} draggable={false} />
-        </div>
-      </div>
+      <div className="rwStripStage">
 
-      {/* Prev / Next arrows */}
-      <button className="rwArrow rwArrowLeft" type="button" aria-label="Previous" onClick={() => go(active - 1)}>&#8249;</button>
-      <button className="rwArrow rwArrowRight" type="button" aria-label="Next" onClick={() => go(active + 1)}>&#8250;</button>
+        {/* Prev peek */}
+        <div className="rwPeek rwPeekLeft" onClick={() => { advance(-1); start(); }}>
+          <img src={images[prev].src} alt={images[prev].alt} draggable={false} />
+          <div className="rwPeekOverlay" />
+        </div>
+
+        {/* Centre main image */}
+        <div className={`rwMain${transitioning ? " rwMainFading" : ""}`}>
+          <img src={images[active].src} alt={images[active].alt} draggable={false} />
+          <button
+            className="rwArrow rwArrowLeft"
+            type="button"
+            aria-label="Previous"
+            onClick={() => { advance(-1); start(); }}
+          >&#8249;</button>
+          <button
+            className="rwArrow rwArrowRight"
+            type="button"
+            aria-label="Next"
+            onClick={() => { advance(1); start(); }}
+          >&#8250;</button>
+        </div>
+
+        {/* Next peek */}
+        <div className="rwPeek rwPeekRight" onClick={() => { advance(1); start(); }}>
+          <img src={images[next].src} alt={images[next].alt} draggable={false} />
+          <div className="rwPeekOverlay" />
+        </div>
+
+      </div>
 
       {/* Dot indicators */}
       <div className="rwDots">
@@ -248,11 +288,18 @@ export default function Home(props: { onOpenQuote: (service?: string) => void })
       <QuoteModal open={modalOpen} onClose={() => setModalOpen(false)} />
 
       {/* ── HERO ──────────────────────────────────────────────── */}
-      <section className="homeHero">
+      <section
+        className="homeHero"
+        style={{
+          backgroundImage: `url(${heroBg})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+        }}
+      >
         <div className="heroBg" />
-        <div className="homeHeroInner">
 
-          {/* LEFT */}
+        <div className="homeHeroInner">
           <div className="homeHeroLeft">
             <div className="homeEyebrow" data-reveal style={{ "--d": "0ms" } as React.CSSProperties}>
               <span className="homeEyebrowDot" />
@@ -261,23 +308,22 @@ export default function Home(props: { onOpenQuote: (service?: string) => void })
             <h1 className="homeHeroTitle" data-reveal style={{ "--d": "80ms" } as React.CSSProperties}>
               Mobile Welding &amp;<br />
               Fabrication in{" "}
-              <span className="accent">Tunbridge Wells</span>
+              <span className="heroAccent">Tunbridge Wells</span>
             </h1>
             <p className="homeHeroSub" data-reveal style={{ "--d": "160ms" } as React.CSSProperties}>
               On-site repairs, fabrication, and structural welding.<br />
               Fast, reliable, professional.
             </p>
             <div className="homeHeroCtas" data-reveal style={{ "--d": "240ms" } as React.CSSProperties}>
-              <button className="btn btnSolid" type="button" onClick={() => setModalOpen(true)}>
+              <button className="btn btnSolid heroCtaSolid" type="button" onClick={() => setModalOpen(true)}>
                 Get a Free Quote
               </button>
-              <NavLink className="btn btnGhost" to="/recent-work">
+              <NavLink className="btn heroCtaGhost" to="/recent-work">
                 View Recent Work
               </NavLink>
             </div>
           </div>
 
-          {/* RIGHT: quote form */}
           <aside
             className="heroQuoteCard heroQuoteClamp"
             aria-label="Quick quote"
@@ -295,7 +341,6 @@ export default function Home(props: { onOpenQuote: (service?: string) => void })
           </aside>
         </div>
 
-        {/* Trust bar */}
         <div className="trustBar" data-reveal style={{ "--d": "300ms" } as React.CSSProperties}>
           <div className="trustInner">
             {trustItems.map((t, i) => (
@@ -337,10 +382,8 @@ export default function Home(props: { onOpenQuote: (service?: string) => void })
 
       {/* ── RECENT WORK ───────────────────────────────────────── */}
       <section className="section alt">
-        <div className="sectionHead" data-reveal>
-          <div className="kicker">OUR PORTFOLIO</div>
+        <div className="sectionHead" data-reveal>         
           <h2>Recent Work</h2>
-          <p>A selection of welding and fabrication projects.</p>
         </div>
         <div data-reveal style={{ "--d": "80ms" } as React.CSSProperties}>
           <RecentWorkStrip images={recentWorkImages} />
