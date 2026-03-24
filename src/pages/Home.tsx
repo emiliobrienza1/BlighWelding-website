@@ -5,7 +5,7 @@ import Callout from '../assets/24hr.png';
 import Agriculture from '../assets/agriculture.png';
 import MOT from '../assets/MOT.png';
 import Mobile from '../assets/mobileweld.jpg';
-import Other from '../assets/Other.png';
+import Other from '../assets/other.png';
 import { NavLink } from "react-router-dom";
 
 type Service = { title: string; desc: string; image: string; };
