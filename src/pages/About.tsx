@@ -161,7 +161,7 @@ export default function About(props: { onOpenQuote?: () => void }) {
           <div data-reveal style={{ "--d": "120ms" } as React.CSSProperties}>
             <div className="aboutImgWrap">
               <img
-                src="src/assets/about.jpg"
+                src= {about}
                 alt="Bligh Welding — welder at work"
                 className="aboutImg"
                 onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
