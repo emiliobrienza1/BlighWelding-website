@@ -1,5 +1,5 @@
 import { useEffect, useState, type FormEvent } from "react";
-import { Routes, Route, NavLink } from "react-router-dom";
+import { Routes, Route, NavLink, useLocation } from "react-router-dom";
 import "./App.css";
 
 import Home from "./pages/Home";
@@ -50,17 +50,10 @@ function QuoteModal(props: {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     const subject = encodeURIComponent("Quote Request");
     const body = encodeURIComponent(
-      `Phone: ${form.phone}
-Location: ${form.location}
-Service: ${form.service}
-
-Details:
-${form.details}`
+      `Phone: ${form.phone}\nLocation: ${form.location}\nService: ${form.service}\n\nDetails:\n${form.details}`
     );
-
     window.location.href = `mailto:info@blighwelding.co.uk?subject=${subject}&body=${body}`;
     onClose();
   };
@@ -69,51 +62,39 @@ ${form.details}`
     <div className="modalOverlay">
       <div className="modalBackdrop" onClick={onClose} />
       <div className="modalCard">
-        <button className="modalClose" onClick={onClose}>
-          ✕
-        </button>
-
+        <button className="modalClose" onClick={onClose}>✕</button>
         <div className="modalGrid">
           <div className="modalLeft">
             <div className="modalKicker">FREE QUOTE</div>
             <div className="modalTitle">Get a Quick Quote</div>
             <div className="modalText">
-              Tell us about your project and we’ll get back to you with a competitive quote.
+              Tell us about your project and we'll get back to you with a competitive quote.
             </div>
           </div>
-
           <form className="modalRight" onSubmit={handleSubmit}>
             <div className="formRow2">
               <div className="field">
                 <label>Phone *</label>
                 <input required value={form.phone} onChange={(e) => update("phone", e.target.value)} />
               </div>
-
               <div className="field">
                 <label>Location *</label>
                 <input required value={form.location} onChange={(e) => update("location", e.target.value)} />
               </div>
             </div>
-
             <div className="field">
               <label>Service Needed *</label>
               <select required value={form.service} onChange={(e) => update("service", e.target.value)}>
-                <option value="" disabled>
-                  Select a service
-                </option>
+                <option value="" disabled>Select a service</option>
                 <option>In-House Fabrication</option>
                 <option>Mobile Welding</option>
               </select>
             </div>
-
             <div className="field">
               <label>Project Details *</label>
               <textarea required rows={4} value={form.details} onChange={(e) => update("details", e.target.value)} />
             </div>
-
-            <button className="quoteSubmit" type="submit">
-              Request Quote
-            </button>
+            <button className="quoteSubmit" type="submit">Request Quote</button>
           </form>
         </div>
       </div>
@@ -121,9 +102,70 @@ ${form.details}`
   );
 }
 
+// ── Mobile nav drawer ─────────────────────────────────────
+function MobileMenu(props: { open: boolean; onClose: () => void; onOpenQuote: () => void }) {
+  const { open, onClose, onOpenQuote } = props;
+  const location = useLocation();
+
+  // Close drawer on route change
+  useEffect(() => { onClose(); }, [location.pathname]);
+
+  // Lock body scroll when open
+  useEffect(() => {
+    document.body.style.overflow = open ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [open]);
+
+  return (
+    <>
+      {/* Backdrop */}
+      <div
+        className={`mobileMenuBackdrop${open ? " mobileMenuBackdropOpen" : ""}`}
+        onClick={onClose}
+      />
+      {/* Drawer */}
+      <div className={`mobileMenu${open ? " mobileMenuOpen" : ""}`}>
+        <nav className="mobileMenuLinks">
+          <NavLink to="/" className={({ isActive }) => isActive ? "mobileMenuLink mobileMenuLinkActive" : "mobileMenuLink"}>
+            Home
+          </NavLink>
+          <div className="mobileMenuSection">
+            <span className="mobileMenuSectionLabel">Services</span>
+            <NavLink to="/services/fabrication" className={({ isActive }) => isActive ? "mobileMenuLink mobileMenuLinkSub mobileMenuLinkActive" : "mobileMenuLink mobileMenuLinkSub"}>
+              In-House Fabrication
+            </NavLink>
+            <NavLink to="/services/mobile" className={({ isActive }) => isActive ? "mobileMenuLink mobileMenuLinkSub mobileMenuLinkActive" : "mobileMenuLink mobileMenuLinkSub"}>
+              Mobile Welding
+            </NavLink>
+          </div>
+          <NavLink to="/recent-work" className={({ isActive }) => isActive ? "mobileMenuLink mobileMenuLinkActive" : "mobileMenuLink"}>
+            Recent Work
+          </NavLink>
+          <NavLink to="/about" className={({ isActive }) => isActive ? "mobileMenuLink mobileMenuLinkActive" : "mobileMenuLink"}>
+            About
+          </NavLink>
+          <NavLink to="/contact" className={({ isActive }) => isActive ? "mobileMenuLink mobileMenuLinkActive" : "mobileMenuLink"}>
+            Contact
+          </NavLink>
+        </nav>
+        <div className="mobileMenuFooter">
+          <button
+            className="callBtn"
+            style={{ width: "100%", borderRadius: 12, height: 50 }}
+            onClick={() => { onOpenQuote(); onClose(); }}
+          >
+            Get a Free Quote
+          </button>
+        </div>
+      </div>
+    </>
+  );
+}
+
 export default function App() {
   const [quoteOpen, setQuoteOpen] = useState(false);
   const [servicePrefill, setServicePrefill] = useState<string | undefined>();
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const openQuote = (service?: string) => {
     setServicePrefill(service);
@@ -136,22 +178,26 @@ export default function App() {
 
   return (
     <>
-      {/* NAVBAR */}
+      {/* ── NAVBAR ── */}
       <header className="nav">
         <div className="navInner">
+
+          {/* Logo — links to home */}
           <div className="logo">
-            <img src={logo} alt="Bligh Welding Logo" className="logoImage" />
+            <NavLink to="/" aria-label="Go to homepage">
+              <img src={logo} alt="Bligh Welding Logo" className="logoImage" />
+            </NavLink>
           </div>
 
+          {/* Desktop links */}
           <nav className="navLinks">
             <NavLink to="/">Home</NavLink>
 
-            {/* SERVICES DROPDOWN */}
             <div className="navDropdown">
               <button className="navDropdownBtn" type="button">
                 Services <span className="navCaret">▾</span>
+                <span className="navBtnUnderline" />
               </button>
-
               <div className="navDropdownMenu">
                 <NavLink to="/services/fabrication" className="dropdownItem">
                   In-House Fabrication
@@ -167,30 +213,52 @@ export default function App() {
             <NavLink to="/contact">Contact</NavLink>
           </nav>
 
+          {/* Right side */}
           <div className="navRight">
-            <button className="callBtn" onClick={() => openQuote()}>
-                Quote
+            {/* Desktop quote button */}
+            <button className="callBtn navDesktopOnly" onClick={() => openQuote()}>
+              Quote
+            </button>
+
+            {/* Mobile hamburger */}
+            <button
+              className="navHamburger"
+              type="button"
+              aria-label={menuOpen ? "Close menu" : "Open menu"}
+              aria-expanded={menuOpen}
+              onClick={() => setMenuOpen(!menuOpen)}
+            >
+              <span className={`navHamLine${menuOpen ? " navHamLineOpen" : ""}`} />
+              <span className={`navHamLine${menuOpen ? " navHamLineOpen" : ""}`} />
+              <span className={`navHamLine${menuOpen ? " navHamLineOpen" : ""}`} />
             </button>
           </div>
         </div>
       </header>
 
-      {/* ROUTES */}
+      {/* Mobile drawer */}
+      <MobileMenu
+        open={menuOpen}
+        onClose={() => setMenuOpen(false)}
+        onOpenQuote={openQuote}
+      />
+
+      {/* ── ROUTES ── */}
       <Routes>
         <Route path="/" element={<Home onOpenQuote={openQuote} />} />
-
-        {/* optional parent route if you still want /services */}
         <Route path="/services" element={<Services />} />
-
         <Route path="/services/fabrication" element={<Fabrication />} />
         <Route path="/services/mobile" element={<MobileWelding />} />
-
         <Route path="/recent-work" element={<RecentWork />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
       </Routes>
 
-      <QuoteModal open={quoteOpen} onClose={() => setQuoteOpen(false)} defaultService={servicePrefill} />
+      <QuoteModal
+        open={quoteOpen}
+        onClose={() => setQuoteOpen(false)}
+        defaultService={servicePrefill}
+      />
     </>
   );
 }

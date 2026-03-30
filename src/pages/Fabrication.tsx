@@ -221,7 +221,7 @@ export default function InHouseFabrication(props: { onOpenQuote?: () => void }) 
           </p>
 
           <div className="contactBar" style={{ marginBottom: 32 }}>
-            <a className="contactPill" href="tel:01234567890">01234 567890</a>
+            <a className="contactPill" href="tel:07399220338">07399 220 338</a>
             <a className="contactPill" href="mailto:info@blighwelding.co.uk">info@blighwelding.co.uk</a>
             {onOpenQuote && (
               <button className="btnSolid" type="button" onClick={onOpenQuote}>

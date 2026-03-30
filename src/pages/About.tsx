@@ -11,6 +11,7 @@ import weld6 from '../assets/weld6.png';
 import weld7 from '../assets/weld7.png';
 import weld8 from '../assets/weld8.png';
 import weld9 from '../assets/weld9.png';
+import about from '../assets/about.jpg';
 
 const weldPhotos = [weld1, weld2, weld3, weld4, weld5, weld6, weld7, weld8, weld9];
 
@@ -160,19 +161,11 @@ export default function About(props: { onOpenQuote?: () => void }) {
           <div data-reveal style={{ "--d": "120ms" } as React.CSSProperties}>
             <div className="aboutImgWrap">
               <img
-                src="/assets/about.jpg"
+                src="src/assets/about.jpg"
                 alt="Bligh Welding — welder at work"
                 className="aboutImg"
                 onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
               />
-              <div className="aboutImgPlaceholder">
-                <div className="aboutImgPlaceholderText">
-                  <span>YOUR PHOTO HERE</span>
-                  <span className="aboutImgPlaceholderSub">
-                    <code>/public/assets/about.jpg</code>
-                  </span>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -263,7 +256,7 @@ export default function About(props: { onOpenQuote?: () => void }) {
           data-reveal
           style={{ "--d": "100ms" } as React.CSSProperties}
         >
-          <a className="contactPill" href="tel:01234567890">01234 567890</a>
+          <a className="contactPill" href="tel:07399220338">07399 220 338</a>
           <a className="contactPill" href="mailto:info@blighwelding.co.uk">
             info@blighwelding.co.uk
           </a>

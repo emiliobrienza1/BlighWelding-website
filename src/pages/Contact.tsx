@@ -26,7 +26,7 @@ function useReveal() {
 }
 
 const details = [
-  { icon: "📞", label: "Phone",         value: "01234 567890",                              href: "tel:01234567890" },
+  { icon: "📞", label: "Phone",         value: "07399 220 338",                              href: "tel:07399220338" },
   { icon: "✉️", label: "Email",         value: "info@blighwelding.co.uk",                   href: "mailto:info@blighwelding.co.uk" },
   { icon: "⚡", label: "Response Time", value: "Same day",                           href: null },
 ];

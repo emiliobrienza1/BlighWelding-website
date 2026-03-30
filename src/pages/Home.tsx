@@ -403,8 +403,7 @@ export default function Home(props: { onOpenQuote: (service?: string) => void })
           <p>Call, text, or send a message — I'll get back to you as soon as possible.</p>
         </div>
         <div className="contactBar" data-reveal style={{ "--d": "80ms" } as React.CSSProperties}>
-          <a className="btn btnGhost" href="tel:01234567890">Call 01234 567890</a>
-          <a className="btn btnGhost" href="mailto:info@blighwelding.co.uk">Email Us</a>
+          <a className="btn btnGhost" href="tel:07399220338">Call 07399 220 338</a>         
           <button className="btn btnSolid" type="button" onClick={() => setModalOpen(true)}>Send a Message</button>
         </div>
       </section>
