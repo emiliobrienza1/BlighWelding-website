@@ -14,7 +14,7 @@ const services: Service[] = [
   { title: "Mobile Welding",            desc: "On-site welding repairs wherever you need us — homes, farms, worksites, and commercial sites.", image: Mobile },
   { title: "MOT Failure Repairs",       desc: "Failed your MOT due to corrosion or damage? We can repair and reinforce safely and correctly.",  image: MOT },
   { title: "Agricultural & Industrial", desc: "Heavy-duty welding and fabrication for machinery, equipment, and structural work.",              image: Agriculture },
-{ title: "In-House Fabrication",      desc: "Custom fabrication in our workshop — gates, railings, brackets, frames and more.",              image:  Agriculture},
+  { title: "In-House Fabrication",      desc: "Custom fabrication in our workshop — gates, railings, brackets, frames and more.",              image: Agriculture},
   { title: "Emergency Callout",         desc: "Need urgent repairs? Fast response for critical fixes and breakdowns.",                         image: Callout },
   { title: "Other Work",                desc: "If you can't see it listed, it doesn't mean we don't do it — get in touch for a quote.",        image: Other },
 ];
@@ -34,14 +34,37 @@ function shuffle<T>(arr: T[]): T[] {
 
 type FormStatus = "idle" | "submitting" | "success" | "error";
 
+// Unified form hook
 function useQuoteForm() {
-  const [form, setForm] = useState({ name: "", email: "", phone: "", location: "", service: "", message: "" });
+  const [form, setForm] = useState({ 
+    name: "", 
+    email: "", 
+    phone: "", 
+    location: "", 
+    service: "", 
+    message: "" 
+  });
   const [status, setStatus] = useState<FormStatus>("idle");
-  const update = (key: keyof typeof form, value: string) => setForm(p => ({ ...p, [key]: value }));
-  const reset = () => { setForm({ name: "", email: "", phone: "", location: "", service: "", message: "" }); setStatus("idle"); };
+
+  const update = (key: keyof typeof form, value: string) => 
+    setForm(p => ({ ...p, [key]: value }));
+
+  const reset = () => {
+    setForm({ name: "", email: "", phone: "", location: "", service: "", message: "" });
+    setStatus("idle");
+  };
+
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate form
+    if (!form.name || !form.email || !form.phone || !form.location || !form.message) {
+      setStatus("error");
+      return;
+    }
+
     setStatus("submitting");
+    
     try {
       const res = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
@@ -49,19 +72,48 @@ function useQuoteForm() {
         body: JSON.stringify({
           access_key: "e9d6add7-02a1-4b38-b2af-1a6af120ce64",
           subject: "New Quote Request — Bligh Welding",
-          from_name: form.name, name: form.name, email: form.email,
-          phone: form.phone, location: form.location, service: form.service, message: form.message,
+          from_name: form.name,
+          name: form.name,
+          email: form.email,
+          phone: form.phone,
+          location: form.location,
+          service: form.service || "Not specified",
+          message: form.message,
         }),
       });
+
+      if (!res.ok) {
+        setStatus("error");
+        return;
+      }
+
       const data = await res.json();
-      if (data.success) { setStatus("success"); reset(); setStatus("success"); }
-      else setStatus("error");
-    } catch { setStatus("error"); }
+      
+      if (data.success) {
+        setStatus("success");
+        // Keep success state visible, then reset after delay
+        setTimeout(() => {
+          reset();
+        }, 2000);
+      } else {
+        setStatus("error");
+      }
+    } catch (err) {
+      console.error("Form submission error:", err);
+      setStatus("error");
+    }
   };
+
   return { form, status, update, submit, reset };
 }
 
-function QuoteFormBody({ form, status, update, submit, onReset }: {
+function QuoteFormBody({ 
+  form, 
+  status, 
+  update, 
+  submit, 
+  onReset 
+}: {
   form: ReturnType<typeof useQuoteForm>["form"];
   status: FormStatus;
   update: ReturnType<typeof useQuoteForm>["update"];
@@ -71,50 +123,113 @@ function QuoteFormBody({ form, status, update, submit, onReset }: {
   if (status === "success") {
     return (
       <div className="formSuccess">
-        <div className="formSuccessTick">&#10003;</div>
-        <div className="formSuccessTitle">Message Sent</div>
+        <div className="formSuccessTick">✓</div>
+        <div className="formSuccessTitle">Message Sent!</div>
         <p className="formSuccessBody">Thanks for getting in touch. I'll get back to you as soon as possible.</p>
-        <button className="btn btnPrimary" type="button" style={{ width: "100%", marginTop: 8 }} onClick={onReset}>
+        <button className="btnSolid" type="button" style={{ width: "100%", marginTop: 16 }} onClick={onReset}>
           Send Another Message
         </button>
       </div>
     );
   }
+
   return (
     <form className="heroQuoteBody" onSubmit={submit}>
       <div className="formRow2">
-        <div className="field"><label>Full Name</label>
-          <input required value={form.name} onChange={e => update("name", e.target.value)} placeholder="Your name" disabled={status === "submitting"} />
+        <div className="field">
+          <label>Full Name</label>
+          <input 
+            required 
+            value={form.name} 
+            onChange={e => update("name", e.target.value)} 
+            placeholder="Your name" 
+            disabled={status === "submitting"}
+            type="text"
+          />
         </div>
-        <div className="field"><label>Email</label>
-          <input required type="email" value={form.email} onChange={e => update("email", e.target.value)} placeholder="your@email.com" disabled={status === "submitting"} />
+        <div className="field">
+          <label>Email</label>
+          <input 
+            required 
+            type="email" 
+            value={form.email} 
+            onChange={e => update("email", e.target.value)} 
+            placeholder="your@email.com" 
+            disabled={status === "submitting"}
+          />
         </div>
       </div>
+
       <div className="formRow2">
-        <div className="field"><label>Phone</label>
-          <input required value={form.phone} onChange={e => update("phone", e.target.value)} placeholder="07xxx xxxxxx" disabled={status === "submitting"} />
+        <div className="field">
+          <label>Phone</label>
+          <input 
+            required 
+            value={form.phone} 
+            onChange={e => update("phone", e.target.value)} 
+            placeholder="07xxx xxxxxx" 
+            disabled={status === "submitting"}
+            type="tel"
+          />
         </div>
-        <div className="field"><label>Location</label>
-          <input required value={form.location} onChange={e => update("location", e.target.value)} placeholder="e.g. Tunbridge Wells" disabled={status === "submitting"} />
+        <div className="field">
+          <label>Location</label>
+          <input 
+            required 
+            value={form.location} 
+            onChange={e => update("location", e.target.value)} 
+            placeholder="e.g. Tunbridge Wells" 
+            disabled={status === "submitting"}
+            type="text"
+          />
         </div>
       </div>
-      <div className="field"><label>Service Needed</label>
-        <select required value={form.service} onChange={e => update("service", e.target.value)} disabled={status === "submitting"}>
-          <option value="" disabled>Select a service</option>
+
+      <div className="field">
+        <label>Service Needed</label>
+        <select 
+          value={form.service} 
+          onChange={e => update("service", e.target.value)} 
+          disabled={status === "submitting"}
+        >
+          <option value="">Select a service (optional)</option>
           <option>Mobile Welding</option>
           <option>In-House Fabrication</option>
           <option>MOT Failure Repairs</option>
-          <option>Agricultural &amp; Industrial</option>
+          <option>Agricultural & Industrial</option>
           <option>Emergency Callout</option>
+          <option>Other</option>
         </select>
       </div>
-      <div className="field"><label>Message</label>
-        <textarea required rows={3} value={form.message} onChange={e => update("message", e.target.value)} placeholder="How can we help?" disabled={status === "submitting"} />
+
+      <div className="field">
+        <label>Message</label>
+        <textarea 
+          required 
+          rows={3} 
+          value={form.message} 
+          onChange={e => update("message", e.target.value)} 
+          placeholder="How can we help? Tell us about your project..." 
+          disabled={status === "submitting"}
+        />
       </div>
+
       {status === "error" && (
-        <div className="formError">Something went wrong — please try again or call us directly.</div>
+        <div className="formError">
+          ⚠ Something went wrong — please check your details and try again, or call us at 07399 220 338.
+        </div>
       )}
-      <button className="btn btnPrimary" type="submit" disabled={status === "submitting"} style={{ width: "100%", opacity: status === "submitting" ? 0.65 : 1 }}>
+
+      <button 
+        className="btnSolid" 
+        type="submit" 
+        disabled={status === "submitting"} 
+        style={{ 
+          width: "100%", 
+          opacity: status === "submitting" ? 0.65 : 1,
+          cursor: status === "submitting" ? "not-allowed" : "pointer"
+        }}
+      >
         {status === "submitting" ? "Sending..." : "Send Message"}
       </button>
     </form>
@@ -123,31 +238,54 @@ function QuoteFormBody({ form, status, update, submit, onReset }: {
 
 function QuoteModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   const { form, status, update, submit, reset } = useQuoteForm();
+
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    const onKey = (e: KeyboardEvent) => { 
+      if (e.key === "Escape") onClose(); 
+    };
     if (open) document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
   }, [open, onClose]);
+
   if (!open) return null;
+
   return (
     <div className="modalOverlay">
       <div className="modalBackdrop" onClick={onClose} />
       <div className="modalCard">
-        <button className="modalClose" type="button" onClick={onClose} aria-label="Close">&#10005;</button>
+        <button className="modalClose" type="button" onClick={onClose} aria-label="Close">✕</button>
         <div className="modalGrid">
           <div className="modalLeft">
             <div className="modalKicker">FREE QUOTE</div>
             <div className="modalTitle">Get a<br />Quote</div>
             <p className="modalText">Fill in your details and I'll get back to you promptly with a price. No obligation, no fuss.</p>
-            <ul className="modalBullets">
-              <li>City &amp; Guilds qualified welder</li>
-              <li>Mobile or in-house — your choice</li>
-              <li>Domestic &amp; commercial welcome</li>
-              <li>Tunbridge Wells &amp; surrounding areas</li>
+            <ul style={{ listStyle: "none", padding: 0, margin: "16px 0 0", display: "flex", flexDirection: "column", gap: "12px" }}>
+              <li style={{ display: "flex", gap: "8px" }}>
+                <span style={{ color: "rgba(0, 0, 0, 0.25)", fontWeight: "bold" }}>✓</span>
+                <span style={{ color: "rgba(0, 0, 0, 0.25)", fontSize: "14px" }}>City & Guilds qualified welder</span>
+              </li>
+              <li style={{ display: "flex", gap: "8px" }}>
+                <span style={{ color: "rgba(0, 0, 0, 0.25)", fontWeight: "bold" }}>✓</span>
+                <span style={{ color: "rgba(0, 0, 0, 0.25)", fontSize: "14px" }}>Mobile or in-house — your choice</span>
+              </li>
+              <li style={{ display: "flex", gap: "8px" }}>
+                <span style={{ color: "rgba(0, 0, 0, 0.25)", fontWeight: "bold" }}>✓</span>
+                <span style={{ color: "rgba(0, 0, 0, 0.25)", fontSize: "14px" }}>Domestic & commercial welcome</span>
+              </li>
+              <li style={{ display: "flex", gap: "8px" }}>
+                <span style={{ color: "rgba(0, 0, 0, 0.25)", fontWeight: "bold" }}>✓</span>
+                <span style={{ color: "rgba(0, 0, 0, 0.25)", fontSize: "14px" }}>Tunbridge Wells & surrounding areas</span>
+              </li>
             </ul>
           </div>
           <div className="modalRight">
-            <QuoteFormBody form={form} status={status} update={update} submit={submit} onReset={reset} />
+            <QuoteFormBody 
+              form={form} 
+              status={status} 
+              update={update} 
+              submit={submit} 
+              onReset={reset} 
+            />
           </div>
         </div>
       </div>
@@ -163,7 +301,10 @@ function useReveal() {
     const els = el.querySelectorAll<HTMLElement>("[data-reveal]");
     const obs = new IntersectionObserver(
       entries => entries.forEach(e => {
-        if (e.isIntersecting) { e.target.classList.add("isVisible"); obs.unobserve(e.target); }
+        if (e.isIntersecting) { 
+          e.target.classList.add("isVisible"); 
+          obs.unobserve(e.target); 
+        }
       }),
       { threshold: 0.07 }
     );
@@ -182,7 +323,9 @@ function RecentWorkStrip({ images }: { images: { src: string; alt: string }[] })
   const timerRef = useRef<number | null>(null);
   const count = images.length;
 
-  const clear = () => { if (timerRef.current) clearInterval(timerRef.current); };
+  const clear = () => { 
+    if (timerRef.current) clearInterval(timerRef.current); 
+  };
 
   const advance = (dir: number) => {
     if (transitioning) return;
@@ -209,7 +352,10 @@ function RecentWorkStrip({ images }: { images: { src: string; alt: string }[] })
     start();
   };
 
-  useEffect(() => { start(); return clear; }, [count]);
+  useEffect(() => { 
+    start(); 
+    return clear; 
+  }, [count]);
 
   if (count === 0) return null;
 
@@ -225,7 +371,6 @@ function RecentWorkStrip({ images }: { images: { src: string; alt: string }[] })
       aria-label="Recent work"
     >
       <div className="rwStripStage">
-
         {/* Prev peek */}
         <div className="rwPeek rwPeekLeft" onClick={() => { advance(-1); start(); }}>
           <img src={images[prev].src} alt={images[prev].alt} draggable={false} />
@@ -240,13 +385,13 @@ function RecentWorkStrip({ images }: { images: { src: string; alt: string }[] })
             type="button"
             aria-label="Previous"
             onClick={() => { advance(-1); start(); }}
-          >&#8249;</button>
+          >‹</button>
           <button
             className="rwArrow rwArrowRight"
             type="button"
             aria-label="Next"
             onClick={() => { advance(1); start(); }}
-          >&#8250;</button>
+          >›</button>
         </div>
 
         {/* Next peek */}
@@ -254,7 +399,6 @@ function RecentWorkStrip({ images }: { images: { src: string; alt: string }[] })
           <img src={images[next].src} alt={images[next].alt} draggable={false} />
           <div className="rwPeekOverlay" />
         </div>
-
       </div>
 
       {/* Dot indicators */}
@@ -273,7 +417,7 @@ function RecentWorkStrip({ images }: { images: { src: string; alt: string }[] })
   );
 }
 
-export default function Home(props: { onOpenQuote: (service?: string) => void }) {
+export default function Home(props: { onOpenQuote?: (service?: string) => void }) {
   const heroFormHook = useQuoteForm();
   const [modalOpen, setModalOpen] = useState(false);
   const pageRef = useReveal();
@@ -315,7 +459,7 @@ export default function Home(props: { onOpenQuote: (service?: string) => void })
               Fast, reliable, professional.
             </p>
             <div className="homeHeroCtas" data-reveal style={{ "--d": "240ms" } as React.CSSProperties}>
-              <button className="btn btnSolid heroCtaSolid" type="button" onClick={() => setModalOpen(true)}>
+              <button className="btnSolid heroCtaSolid" type="button" onClick={() => setModalOpen(true)}>
                 Get a Free Quote
               </button>
               <NavLink className="btn heroCtaGhost" to="/recent-work">
@@ -325,7 +469,7 @@ export default function Home(props: { onOpenQuote: (service?: string) => void })
           </div>
 
           <aside
-            className="heroQuoteCard heroQuoteClamp"
+            className="heroQuoteCard"
             aria-label="Quick quote"
             data-reveal
             style={{ "--d": "120ms" } as React.CSSProperties}
@@ -374,7 +518,7 @@ export default function Home(props: { onOpenQuote: (service?: string) => void })
           ))}
         </div>
         <div className="sectionCta" data-reveal style={{ "--d": "80ms" } as React.CSSProperties}>
-          <button className="btn btnSolid" type="button" onClick={() => setModalOpen(true)}>
+          <button className="btnSolid" type="button" onClick={() => setModalOpen(true)}>
             Get a Quote for Any Service
           </button>
         </div>
@@ -390,7 +534,7 @@ export default function Home(props: { onOpenQuote: (service?: string) => void })
         </div>
         <div className="sectionCta" data-reveal style={{ "--d": "120ms" } as React.CSSProperties}>
           <NavLink className="rwViewAll" to="/recent-work">
-            View all recent work &rarr;
+            View all recent work →
           </NavLink>
         </div>
       </section>
@@ -403,8 +547,8 @@ export default function Home(props: { onOpenQuote: (service?: string) => void })
           <p>Call, text, or send a message — I'll get back to you as soon as possible.</p>
         </div>
         <div className="contactBar" data-reveal style={{ "--d": "80ms" } as React.CSSProperties}>
-          <a className="btn btnGhost" href="tel:07399220338">Call 07399 220 338</a>         
-          <button className="btn btnSolid" type="button" onClick={() => setModalOpen(true)}>Send a Message</button>
+          <a className="btnGhost" href="tel:07399220338">Call 07399 220 338</a>         
+          <button className="btnSolid" type="button" onClick={() => setModalOpen(true)}>Send a Message</button>
         </div>
       </section>
 

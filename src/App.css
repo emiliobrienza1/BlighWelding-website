@@ -1884,6 +1884,7 @@ h1, h2, h3, h4, h5, h6 { color: rgba(20,24,31,0.96); }
   .cpCard { padding: 26px 20px 30px; }
   .cpGrid2 { grid-template-columns: 1fr; }
 }
+
 /* =========================================================
    IHF + MOBILE WELDING — shared split layout
    ========================================================= */
@@ -1894,6 +1895,10 @@ h1, h2, h3, h4, h5, h6 { color: rgba(20,24,31,0.96); }
   grid-template-columns: 1fr 1fr;
   gap: 56px;
   align-items: center;
+}
+
+.ihfSplitReverse {
+  grid-template-columns: 1fr 1fr;
 }
 
 .ihfHeading {
@@ -1919,41 +1924,13 @@ h1, h2, h3, h4, h5, h6 { color: rgba(20,24,31,0.96); }
   box-shadow: 0 30px 90px rgba(8,12,18,0.20);
   background: var(--card);
   position: relative;
-  min-height: 420px;
 }
+
 .ihfImg {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  height: auto;
   display: block;
   filter: saturate(0.93) contrast(1.06);
-}
-.ihfImgPlaceholder {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  text-align: center;
-  padding: 24px;
-  color: var(--muted);
-  background: var(--card);
-  pointer-events: none;
-}
-.ihfImgPlaceholderText {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  font-family: 'Barlow Condensed', sans-serif;
-  font-weight: 900;
-  letter-spacing: 0.06em;
-  font-size: 13px;
-}
-.ihfImgPlaceholderSub {
-  font-size: 11px;
-  font-weight: 400;
-  opacity: 0.60;
-  font-family: 'Barlow', sans-serif;
-  letter-spacing: 0;
 }
 
 .mwImgWrap {
@@ -1962,11 +1939,11 @@ h1, h2, h3, h4, h5, h6 { color: rgba(20,24,31,0.96); }
   border: 1px solid var(--border);
   box-shadow: 0 30px 90px rgba(8,12,18,0.20);
   position: relative;
-  height: 440px;
 }
+
 .mwImg {
   width: 100%;
-  height: 100%;
+  height: auto;
   display: block;
   object-fit: cover;
   object-position: center;
@@ -2060,6 +2037,7 @@ h1, h2, h3, h4, h5, h6 { color: rgba(20,24,31,0.96); }
   font-size: 12px;
   padding: 0 18px 32px;
 }
+
 /* ── Nav link animated underline ── */
 .navLinks a,
 .navDropdownBtn {
@@ -2106,6 +2084,7 @@ h1, h2, h3, h4, h5, h6 { color: rgba(20,24,31,0.96); }
 .navLinks a.active::after {
   transform: scaleX(1);
 }
+
 /* =========================================================
    ABOUT PAGE — WELD QUALITY SECTION
    ========================================================= */
@@ -2191,10 +2170,8 @@ h1, h2, h3, h4, h5, h6 { color: rgba(20,24,31,0.96); }
   display: block;
   aspect-ratio: 1 / 1;
   box-shadow: var(--shadow);
-  /* reveal animation handled by data-reveal */
 }
 
-/* Override data-reveal for tiles so they slide up individually */
 .aboutWeldTile[data-reveal] {
   opacity: 0;
   transform: translateY(24px) scale(0.97);
@@ -2308,18 +2285,17 @@ h1, h2, h3, h4, h5, h6 { color: rgba(20,24,31,0.96); }
 @media (max-width: 480px) {
   .aboutWeldGrid { grid-template-columns: repeat(2, 1fr); }
 }
+
 /* =========================================================
    MOBILE NAV — hamburger + drawer
    ========================================================= */
 
-/* Hide hamburger on desktop, show quote button */
 .navHamburger    { display: none; }
 .navDesktopOnly  { display: inline-flex; }
 
 @media (max-width: 900px) {
   .navDesktopOnly { display: none; }
 
-  /* ── Hamburger button ── */
   .navHamburger {
     display: flex;
     flex-direction: column;
@@ -2350,7 +2326,6 @@ h1, h2, h3, h4, h5, h6 { color: rgba(20,24,31,0.96); }
     transform-origin: center;
   }
 
-  /* Animate to X when open */
   .navHamLine:nth-child(1).navHamLineOpen {
     transform: translateY(7px) rotate(45deg);
   }
@@ -2363,7 +2338,6 @@ h1, h2, h3, h4, h5, h6 { color: rgba(20,24,31,0.96); }
   }
 }
 
-/* ── Backdrop ── */
 .mobileMenuBackdrop {
   position: fixed;
   inset: 0;
@@ -2379,7 +2353,6 @@ h1, h2, h3, h4, h5, h6 { color: rgba(20,24,31,0.96); }
   pointer-events: auto;
 }
 
-/* ── Drawer ── */
 .mobileMenu {
   position: fixed;
   top: 0;
@@ -2396,7 +2369,7 @@ h1, h2, h3, h4, h5, h6 { color: rgba(20,24,31,0.96); }
   box-shadow: -12px 0 48px rgba(8, 12, 18, 0.18);
   display: flex;
   flex-direction: column;
-  padding-top: 80px; /* clears the nav bar */
+  padding-top: 80px;
   transform: translateX(100%);
   transition: transform 320ms cubic-bezier(0.4, 0, 0.2, 1);
   overflow-y: auto;
@@ -2405,7 +2378,6 @@ h1, h2, h3, h4, h5, h6 { color: rgba(20,24,31,0.96); }
   transform: translateX(0);
 }
 
-/* ── Drawer links ── */
 .mobileMenuLinks {
   flex: 1;
   display: flex;
@@ -2436,7 +2408,6 @@ h1, h2, h3, h4, h5, h6 { color: rgba(20,24,31,0.96); }
   background: rgba(20, 24, 31, 0.03);
 }
 
-/* Services sub-section */
 .mobileMenuSection {
   display: flex;
   flex-direction: column;
@@ -2457,13 +2428,11 @@ h1, h2, h3, h4, h5, h6 { color: rgba(20,24,31,0.96); }
   letter-spacing: 0.04em;
 }
 
-/* ── Drawer footer ── */
 .mobileMenuFooter {
   padding: 20px 20px 32px;
   border-top: 1px solid var(--border);
 }
 
-/* ── Logo link — remove default anchor styling ── */
 .logo a {
   display: flex;
   align-items: center;

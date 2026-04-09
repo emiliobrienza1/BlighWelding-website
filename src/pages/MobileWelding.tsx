@@ -1,6 +1,8 @@
 // src/pages/MobileWelding.tsx
 import React, { useEffect, useRef } from "react";
 import mobileWeld1 from "../assets/mobileweld1.jpg";
+import mobileWeld2 from "../assets/mobileweld2.png";
+import mobileWeld3 from "../assets/mobileweld3.png";
 
 function useReveal() {
   const ref = useRef<HTMLDivElement>(null);
@@ -137,7 +139,7 @@ export default function MobileWelding(props: { onOpenQuote?: () => void }) {
       <section className="section alt">
         <div className="ihfSplit ihfSplitReverse">
           <div data-reveal style={{ "--d": "0ms" } as React.CSSProperties}>
-            <ImgSlot src={mobileWeld1} alt="Trailer welding repair" />
+            <ImgSlot src={mobileWeld2} alt="Trailer welding repair" />
           </div>
           <div data-reveal style={{ "--d": "140ms" } as React.CSSProperties}>
             <div className="kicker">WHAT WE REPAIR</div>
@@ -183,7 +185,7 @@ export default function MobileWelding(props: { onOpenQuote?: () => void }) {
             </ul>
           </div>
           <div data-reveal style={{ "--d": "140ms" } as React.CSSProperties}>
-            <ImgSlot src={mobileWeld1} alt="On-site welding repair" />
+            <ImgSlot src={mobileWeld3} alt="On-site welding repair" />
           </div>
         </div>
       </section>

@@ -1,5 +1,9 @@
 // src/pages/InHouseFabrication.tsx
 import React, { useEffect, useRef } from "react";
+import inhouse1 from "../assets/inhouse1.png";
+import inhouse2 from "../assets/inhouse2.png";
+import inhouse3 from "../assets/inhouse3.png";
+
 
 function useReveal() {
   const ref = useRef<HTMLDivElement>(null);
@@ -24,21 +28,10 @@ function useReveal() {
   return ref;
 }
 
-function ImgSlot({ src, alt, hint }: { src: string; alt: string; hint: string }) {
+function ImgSlot({ src, alt }: { src: string; alt: string }) {
   return (
     <div className="ihfImgWrap">
-      <img
-        src={src}
-        alt={alt}
-        className="ihfImg"
-        onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
-      />
-      <div className="ihfImgPlaceholder">
-        <div className="ihfImgPlaceholderText">
-          <span>YOUR PHOTO HERE</span>
-          <span className="ihfImgPlaceholderSub"><code>{hint}</code></span>
-        </div>
-      </div>
+      <img src={src} alt={alt} className="ihfImg" />
     </div>
   );
 }
@@ -136,11 +129,7 @@ export default function InHouseFabrication(props: { onOpenQuote?: () => void }) 
             )}
           </div>
           <div data-reveal style={{ "--d": "140ms" } as React.CSSProperties}>
-            <ImgSlot
-              src="/assets/service-fabrication.jpg"
-              alt="In-house fabrication workshop"
-              hint="/public/assets/service-fabrication.jpg"
-            />
+            <ImgSlot src={inhouse1} alt="In-house fabrication workshop" />
           </div>
         </div>
       </section>
@@ -149,11 +138,7 @@ export default function InHouseFabrication(props: { onOpenQuote?: () => void }) 
       <section className="section alt">
         <div className="ihfSplit ihfSplitReverse">
           <div data-reveal style={{ "--d": "0ms" } as React.CSSProperties}>
-            <ImgSlot
-              src="/assets/service-fabrication2.jpg"
-              alt="Workshop fabrication project"
-              hint="/public/assets/service-fabrication2.jpg"
-            />
+            <ImgSlot src={inhouse2} alt="Workshop fabrication project" />
           </div>
           <div data-reveal style={{ "--d": "140ms" } as React.CSSProperties}>
             <div className="kicker">WHAT WE WORK ON</div>
@@ -197,11 +182,7 @@ export default function InHouseFabrication(props: { onOpenQuote?: () => void }) 
             </ul>
           </div>
           <div data-reveal style={{ "--d": "140ms" } as React.CSSProperties}>
-            <ImgSlot
-              src="/assets/service-fabrication3.jpg"
-              alt="Workshop welding detail"
-              hint="/public/assets/service-fabrication3.jpg"
-            />
+            <ImgSlot src={inhouse3} alt="Workshop welding detail" />
           </div>
         </div>
       </section>
