@@ -5,6 +5,7 @@ import Callout from '../assets/Emergency.jpg';
 import Agriculture from '../assets/agriculture.png';
 import MOT from '../assets/MOT.png';
 import Mobile from '../assets/mobileweld.jpg';
+import Inhouse from '../assets/inhouse1.png';
 import Other from '../assets/other.png';
 import { NavLink } from "react-router-dom";
 
@@ -14,7 +15,7 @@ const services: Service[] = [
   { title: "Mobile Welding",            desc: "On-site welding repairs wherever you need us — homes, farms, worksites, and commercial sites.", image: Mobile },
   { title: "MOT Failure Repairs",       desc: "Failed your MOT due to corrosion or damage? We can repair and reinforce safely and correctly.",  image: MOT },
   { title: "Agricultural & Industrial", desc: "Heavy-duty welding and fabrication for machinery, equipment, and structural work.",              image: Agriculture },
-  { title: "In-House Fabrication",      desc: "Custom fabrication in our workshop — gates, railings, brackets, frames and more.",              image: Agriculture},
+  { title: "In-House Fabrication",      desc: "Custom fabrication in our workshop — gates, railings, brackets, frames and more.",              image: Inhouse},
   { title: "Emergency Callout",         desc: "Need urgent repairs? Fast response for critical fixes and breakdowns.",                         image: Callout },
   { title: "Other Work",                desc: "If you can't see it listed, it doesn't mean we don't do it — get in touch for a quote.",        image: Other },
 ];
