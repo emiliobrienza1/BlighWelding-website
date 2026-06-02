@@ -1172,33 +1172,22 @@ h1, h2, h3, h4, h5, h6 { color: rgba(20,24,31,0.96); }
   transform: translateY(-50%);
   width: 46px;
   height: 58px;
-  border-radius: 14px;
-  border: 1px solid var(--border);
-  background: linear-gradient(180deg, rgba(255,255,255,0.78), rgba(210,216,224,0.55));
+  border: none;
+  background: transparent;
   color: rgba(20,24,31,0.92);
   cursor: pointer;
-  font-size: 28px;
+  font-size: 48px;
   font-weight: 900;
   display: grid;
   place-items: center;
 }
-.rwNav:hover { background: linear-gradient(180deg, rgba(255,255,255,0.88), rgba(206,213,222,0.62)); border-color: var(--border2); }
+.rwNav:hover {
+  background: transparent;
+  border: none;
+}
 .rwNav:disabled { opacity: 0.35; cursor: not-allowed; }
 .rwPrev { left: 12px; }
 .rwNext { right: 12px; }
-.rwMeta {
-  position: absolute;
-  left: 12px;
-  right: 12px;
-  bottom: 12px;
-  text-align: center;
-  font-size: 12px;
-  color: rgba(20,24,31,0.74);
-  padding: 8px 10px;
-  border-radius: 12px;
-  background: linear-gradient(180deg, rgba(255,255,255,0.74), rgba(210,216,224,0.52));
-  border: 1px solid var(--border);
-}
 
 /* Before/After in lightbox */
 .rwPairContent { width: 100%; background: #e9edf2; }

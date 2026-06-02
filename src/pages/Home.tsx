@@ -1,7 +1,7 @@
 // src/pages/Home.tsx
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import heroBg from '../assets/homebg.png';
-import Callout from '../assets/24hr.png';
+import Callout from '../assets/Emergency.jpg';
 import Agriculture from '../assets/agriculture.png';
 import MOT from '../assets/MOT.png';
 import Mobile from '../assets/mobileweld.jpg';

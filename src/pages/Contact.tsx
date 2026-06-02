@@ -1,5 +1,6 @@
 // src/pages/Contact.tsx
 import React, { useEffect, useRef, useState } from "react";
+import contactbg from "../assets/contactbg.png";
 
 type FormStatus = "idle" | "submitting" | "success" | "error";
 

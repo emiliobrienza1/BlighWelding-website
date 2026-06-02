@@ -151,7 +151,6 @@ function Lightbox({
           type="button"
         >&#8250;</button>
 
-        <div className="rwMeta">{index + 1} / {items.length}</div>
       </div>
     </div>
   );
